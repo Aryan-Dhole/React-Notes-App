@@ -34,7 +34,7 @@ Clone and install:
 ---
 
 ## 🌍 Live Demo
-[Click Here]()
+[Click Here](https://react-ai-notes-app.netlify.app/)
 
 ## Preview
 ![alt text](image.png)
