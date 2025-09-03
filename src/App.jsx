@@ -14,6 +14,8 @@ function App() {
   const [editTitle, setEditTitle] = useState("")
   const [editContent, setEditContent] = useState("")
 
+  const [search, setSearch] = useState("");
+
 
   const contentRef = useRef(null);
   const editContentRef = useRef(null);
@@ -66,7 +68,7 @@ function App() {
     <>
       <div className='min-h-screen bg-gray-900 text-white p-12'>
         <h1 className='text-3xl font-bold text-center mb-16'>📝Notes App</h1>
-        <div className='flex flex-col items-center gap-y-4 mb-16'>
+        <div className='flex flex-col items-center gap-y-4 mb-4'>
           <input type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -93,71 +95,84 @@ function App() {
           >
             Add
           </button>
+
+          <input
+            type="text"
+            placeholder="Search notes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-200 py-2 px-12 mt-12 rounded-xl bg-gray-800 text-white outline-none"
+          />
+
         </div>
         <h1 className='text-sm italic text-center mb-4 text-gray-400'>Your Notes will appear below! </h1>
         <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4'>
           {
-            notes.map((note, index) => (
-              <div key={index}
-                className='bg-gray-800 p-4 rounded-2xl shadow hover:shadow-lg transition'>
-                {editingIndex === index ? (
-                  <div className="flex flex-col gap-2 flex-1">
-                    <input
-                      type="text"
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                      className="px-2 py-1 rounded bg-gray-700 text-white outline-none"
-                      autoFocus
-                    />
-                    <textarea
-                      ref={editContentRef}
-                      value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
-                      className="px-2 py-1 rounded bg-gray-700 text-white outline-none resize-none overflow-hidden"
-                    />
+            notes
+              .filter(note =>
+                note.title.toLowerCase().includes(search.toLowerCase()) ||
+                note.content.toLowerCase().includes(search.toLowerCase())
+              ).map((note, index) => (
+                <div key={index}
+                  className='bg-gray-800 p-4 rounded-2xl shadow hover:shadow-lg transition'>
+                  {editingIndex === index ? (
+                    <div className="flex flex-col gap-2 flex-1">
+                      <input
+                        type="text"
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        className="px-2 py-1 rounded bg-gray-700 text-white outline-none"
+                        autoFocus
+                      />
+                      <textarea
+                        ref={editContentRef}
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        className="px-2 py-1 rounded bg-gray-700 text-white outline-none resize-none overflow-hidden"
+                      />
 
-                    <div className="flex gap-2 mt-2">
-                      <button
-                        onClick={() => saveEdit(index)}
-                        className="bg-green-600 px-3 py-1 rounded"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => cancelEdit()}
-                        className="bg-gray-600 px-3 py-1 rounded"
-                      >
-                        Cancel
-                      </button>
+                      <div className="flex gap-2 mt-2">
+                        <button
+                          onClick={() => saveEdit(index)}
+                          className="bg-green-600 px-3 py-1 rounded"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => cancelEdit()}
+                          className="bg-gray-600 px-3 py-1 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <>
-                    <h2 className="font-bold mb-2">{note.title}</h2>
-                    <button
-                      onClick={() => {
-                        setEditingIndex(index)
-                        setEditTitle(note.title)
-                        setEditContent(note.content)
-                      }}
-                      className='mr-2 bg-gray-600 w-8 h-8 rounded-full hover:bg-gray-500 mb-4'
-                      title='Edit Note'>
-                      ✏️
-                    </button>
-                    <button
-                      onClick={() => deleteNote(index)}
-                      className="text-red-500 bg-gray-600 w-8 h-8 rounded-full hover:text-red-700 hover:bg-gray-500 mb-4"
-                      title="Delete Note"
-                    >
-                      ❌
-                    </button>
-                    <p className='text-gray-100'>{note.content}</p>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <h2 className="font-bold mb-2">{note.title}</h2>
+                      <button
+                        onClick={() => {
+                          setEditingIndex(index)
+                          setEditTitle(note.title)
+                          setEditContent(note.content)
+                        }}
+                        className='mr-2 bg-gray-600 w-8 h-8 rounded-full hover:bg-gray-500 mb-4'
+                        title='Edit Note'>
+                        ✏️
+                      </button>
+                      <button
+                        onClick={() => deleteNote(index)}
+                        className="text-red-500 bg-gray-600 w-8 h-8 rounded-full hover:text-red-700 hover:bg-gray-500 mb-4"
+                        title="Delete Note"
+                      >
+                        ❌
+                      </button>
+                      <p className='text-gray-100'>{note.content}</p>
+                    </>
+                  )}
 
 
-              </div>
-            ))
+                </div>
+              ))
           }
         </div>
       </div>
