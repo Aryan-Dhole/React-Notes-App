@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 
 function App() {
 
+  // --- State Management ---//
+
+  // title
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [notes, setNotes] = useState(() => {
@@ -20,6 +23,9 @@ function App() {
   const contentRef = useRef(null);
   const editContentRef = useRef(null);
 
+  // --- Handlers --- //
+
+  // setting scroll height auto 
   useEffect(() => {
     if (editContentRef.current) {
       editContentRef.current.style.height = "auto";
@@ -27,13 +33,13 @@ function App() {
     }
   }, [editContent, editingIndex]);
 
-
+  // Save to local Storage
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes))
   }, [notes])
 
 
-
+  // Saving the Edited contents
   const saveEdit = (index) => {
     const updatedNotes = notes.map((n, i) =>
       i === index ? { ...n, title: editTitle, content: editContent } : n
@@ -44,13 +50,14 @@ function App() {
     setEditContent("");
   };
 
+  // function for cancel during editing 
   const cancelEdit = () => {
     setEditingIndex(null);
     setEditTitle("");
     setEditContent("");
   };
 
-
+  // Add Notes Function
   const addNote = () => {
     if (!title.trim() && !content.trim()) return;
     const newNote = { title, content }
@@ -59,10 +66,12 @@ function App() {
     setContent("")
   }
 
-
+  // Delete Notes Function
   const deleteNote = (id) => {
     setNotes(notes.filter((_, index) => index !== id))
   }
+
+  // --- render --- //
 
   return (
     <>
@@ -88,7 +97,6 @@ function App() {
             placeholder="Enter Content..."
             className="px-4 py-2 w-120 rounded-md bg-gray-800 text-white resize-none overflow-hidden"
           />
-
           <button
             onClick={addNote}
             className='bg-violet-600 w-70 px-6 py-2 rounded-2xl'
